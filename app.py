@@ -22,7 +22,7 @@ import base64
 from scipy import misc
 from skimage.morphology import skeletonize, thin
 from FingerPrintFunctions import fingerBW, fingerMask
-os.chdir("/home/estudiantes/davida.acevedo/Downloads/Archivospython/python-fingerprint-recognition-master") #Definicion de la ruta master
+os.chdir("/home/osboxes/Documents/HuellasUdeA/python-fingerprint-recognition-master") #Definicion de la ruta master
 
 """--------------------------------------------------------------------------------------------
 ----------2. Remover puntos de la imagen (Ruido)-----------------------------------------------
@@ -89,33 +89,20 @@ def get_descriptors(img):#Descriptor de la huellas dactilares.
 """--------------------------------------------------------------------------------------------
 ----------4. Codigo Principal -----------------------------------------------------------------
 --------------------------------------------------------------------------------------------"""
-def main(foto):
-	#Lectura de la primera imagen
-    img1 = base64.decodestring(foto)
-    skin = np.zeros((2808,3744,3),dtype='uint8')
-    cv2.imshow('imagen',skin)
-    print("decodifico")
-    plt.imshow(img1)
-    plt.savefig('/home/estudiantes/davida.acevedo/Downloads/Archivospython/python-fingerprint-recognition-master/database/foto.png')
-    print("guardo")
-    img1 = cv2.imread('/home/estudiantes/davida.acevedo/Downloads/Archivospython/python-fingerprint-recognition-master/database/foto.png', 3)
-	#Se aplica un resize para mejorar el tiempo de computo
-     
+def main(filename):
+    #Lectura de la primera imagen
+    img1 = cv2.imread('/home/osboxes/Documents/HuellasUdeA/python-fingerprint-recognition-master/database/'+filename, 3)
+    #Se aplica un resize para mejorar el tiempo de computo
     img2=img1
-    print("paso 1")
-    img1 = cv2.resize(img1, (0,0), fx=0.5, fy=0.5)
- 
+    img1 = cv2.resize(img1, (0,0), fx=0.2, fy=0.2)
 	#Descriptor de la primera imagen
     kp1, des1 = get_descriptors(img1)
-
     #Lectura de la segunda imagen
     #img2 = cv2.imread('/home/estudiantes/davida.acevedo/Downloads/Archivospython/python-fingerprint-recognition-master/database/101_1.tif', 3)
 	#Se aplica un resize para mejorar el tiempo de computo
-    img2 = cv2.resize(img2, (0,0), fx=0.5, fy=0.5)
+    img2 = cv2.resize(img2, (0,0), fx=0.2, fy=0.2)
 	#Descriptor de la segunda imagen
     kp2, des2 = get_descriptors(img2)
-
-    print("paso 2")
     # Matching entre descriptores
     bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
     matches = sorted(bf.match(des1, des2), key=lambda match:match.distance)
@@ -125,27 +112,20 @@ def main(foto):
     f, axarr = plt.subplots(1,2)
     axarr[0].imshow(img4)
     axarr[1].imshow(img5)
-    plt.savefig('/home/estudiantes/davida.acevedo/Downloads/Archivospython/python-fingerprint-recognition-master/database/img4.png')
+    plt.savefig('/home/osboxes/Documents/HuellasUdeA/python-fingerprint-recognition-master/database/img4.png')
     #Mostrar Matches
     img3 = cv2.drawMatches(img1, kp1, img2, kp2, matches, flags=2, outImg=None)
     plt.imshow(img3)
-    plt.savefig('/home/estudiantes/davida.acevedo/Downloads/Archivospython/python-fingerprint-recognition-master/database/img3.png')
-    print("paso 3")
+    plt.savefig('/home/osboxes/Documents/HuellasUdeA/python-fingerprint-recognition-master/database/img3.png')
     #Calcular puntaje
     score = 0
     for match in matches:
         score += match.distance
     score_threshold = 33
     if score/len(matches) < score_threshold:
-        matching=0
+        return "Comparacion exitosa"
     else:
-        matching=1
-
-    print("paso 4")
-
-
-
-	
+        return "Comparacion fallida"
 	
 if __name__ == "__main__":
 	try:
