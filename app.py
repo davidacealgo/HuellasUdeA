@@ -22,7 +22,7 @@ import base64
 from scipy import misc
 from skimage.morphology import skeletonize, thin
 from FingerPrintFunctions import fingerBW, fingerMask
-os.chdir("/home/osboxes/Documents/HuellasUdeA/python-fingerprint-recognition-master") #Definicion de la ruta master
+os.chdir("/home/lis/Documents/Dormi/PDI/HuellasUdeA/python-fingerprint-recognition-master") #Definicion de la ruta master
 
 """--------------------------------------------------------------------------------------------
 ----------2. Remover puntos de la imagen (Ruido)-----------------------------------------------
@@ -91,7 +91,7 @@ def get_descriptors(img):#Descriptor de la huellas dactilares.
 --------------------------------------------------------------------------------------------"""
 def main(filename):
     #Lectura de la primera imagen
-    img1 = cv2.imread('/home/osboxes/Documents/HuellasUdeA/python-fingerprint-recognition-master/database/'+filename, 3)
+    img1 = cv2.imread('/home/lis/Documents/Dormi/PDI/HuellasUdeA/python-fingerprint-recognition-master/database/'+filename, 3)
     #Se aplica un resize para mejorar el tiempo de computo
     img2=img1
     img1 = cv2.resize(img1, (0,0), fx=0.2, fy=0.2)
@@ -112,20 +112,20 @@ def main(filename):
     f, axarr = plt.subplots(1,2)
     axarr[0].imshow(img4)
     axarr[1].imshow(img5)
-    plt.savefig('/home/osboxes/Documents/HuellasUdeA/python-fingerprint-recognition-master/database/img4.png')
+    plt.savefig('/home/lis/Documents/Dormi/PDI/HuellasUdeA/python-fingerprint-recognition-master/database/img4.png')
     #Mostrar Matches
     img3 = cv2.drawMatches(img1, kp1, img2, kp2, matches, flags=2, outImg=None)
     plt.imshow(img3)
-    plt.savefig('/home/osboxes/Documents/HuellasUdeA/python-fingerprint-recognition-master/database/img3.png')
+    plt.savefig('/home/lis/Documents/Dormi/PDI/HuellasUdeA/python-fingerprint-recognition-master/database/img3.png')
     #Calcular puntaje
     score = 0
     for match in matches:
         score += match.distance
     score_threshold = 33
     if score/len(matches) < score_threshold:
-        return "Comparacion exitosa"
+        return "Comparacion correcta"
     else:
-        return "Comparacion fallida"
+        return "Comparacion erronea"
 	
 if __name__ == "__main__":
 	try:
